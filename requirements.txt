@@ -1,0 +1,9 @@
+# blast_assessment/requirements.txt
+
+confluent-kafka==2.4.0
+pymongo==4.7.3
+fastapi==0.111.1
+uvicorn[standard]==0.30.1
+httpx==0.27.0
+pydantic==2.7.4
+python-dotenv==1.0.1
