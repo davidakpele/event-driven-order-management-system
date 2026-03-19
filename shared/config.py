@@ -1,5 +1,3 @@
-# blast_assessment/shared/config.py
-
 import os
 from dataclasses import dataclass, field
 from typing import List
@@ -20,7 +18,7 @@ class KafkaConfig:
     acks: str = os.getenv("KAFKA_ACKS", "all")
     retries: int = int(os.getenv("KAFKA_RETRIES", "5"))
     retry_backoff_ms: int = int(os.getenv("KAFKA_RETRY_BACKOFF_MS", "300"))
-    max_in_flight_requests_per_connection: int = 1  # ensures ordering when retries > 0
+    max_in_flight_requests_per_connection: int = 1  
     enable_idempotence: bool = True
 
 

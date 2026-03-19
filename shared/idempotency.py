@@ -1,5 +1,3 @@
-# blast_assessment/shared/idempotency.py
-
 import hashlib
 import json
 import uuid
@@ -93,13 +91,11 @@ class IdempotencyStore:
                     ).to_dict()
                 },
                 upsert=True,
-                return_document=False,  # return document BEFORE update
+                return_document=False, 
             )
             if result is None:
-                # Document was newly inserted — we own this key
                 logger.info("Idempotency key claimed", extra={"key": key})
                 return None
-            # Document existed already
             record = IdempotencyRecord.from_dict(result)
             logger.info(
                 "Idempotency key already exists",

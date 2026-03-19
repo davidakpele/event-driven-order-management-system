@@ -1,5 +1,3 @@
-# blast_assessment/shared/logging.py
-
 import logging
 import json
 import sys
@@ -8,7 +6,6 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 from contextvars import ContextVar
 
-# Context variables for request tracing
 correlation_id_var: ContextVar[Optional[str]] = ContextVar("correlation_id", default=None)
 service_name_var: ContextVar[str] = ContextVar("service_name", default="blast")
 
@@ -26,8 +23,6 @@ class StructuredFormatter(logging.Formatter):
         correlation_id = correlation_id_var.get()
         if correlation_id:
             log_entry["correlation_id"] = correlation_id
-
-        # Extra fields attached via logger.info("msg", extra={...})
         for key, value in record.__dict__.items():
             if key not in (
                 "name", "msg", "args", "levelname", "levelno", "pathname",

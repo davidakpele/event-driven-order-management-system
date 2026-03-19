@@ -1,5 +1,3 @@
-# blast_assessment/kafka/events.py
-
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from enum import Enum
@@ -8,7 +6,7 @@ import uuid
 import json
 
 
-# ─── Topic Definitions ────────────────────────────────────────────────────────
+# ─── Topic Definitions
 
 class Topics:
     ORDERS_CREATED = "orders.created"
@@ -19,10 +17,10 @@ class Topics:
     NOTIFICATIONS_REQUESTED = "notifications.requested"
     NOTIFICATIONS_SENT = "notifications.sent"
     WEBHOOKS_RECEIVED = "webhooks.received"
-    DEAD_LETTER = "blast.dlq"  # Dead-letter queue topic
+    DEAD_LETTER = "blast.dlq"
 
 
-# ─── Event Base ───────────────────────────────────────────────────────────────
+# ─── Event Base 
 
 @dataclass
 class BaseEvent:
@@ -59,7 +57,7 @@ class BaseEvent:
         )
 
 
-# ─── Domain Events ────────────────────────────────────────────────────────────
+# ─── Domain Events 
 
 class EventTypes:
     ORDER_CREATED = "order.created"

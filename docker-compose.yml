@@ -11,6 +11,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - blast-assessment-network
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
@@ -19,7 +21,6 @@ services:
         condition: service_healthy
     ports:
       - "9092:9092"
-      - "9093:9093"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -37,6 +38,8 @@ services:
       interval: 15s
       timeout: 10s
       retries: 10
+    networks:
+      - blast-assessment-network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -48,6 +51,9 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: blast-local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    restart: unless-stopped
+    networks:
+      - blast-assessment-network
 
   mongodb:
     image: mongo:7.0
@@ -62,6 +68,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - blast-assessment-network
 
   mongo-express:
     image: mongo-express:1.0.2
@@ -75,6 +83,9 @@ services:
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
+    restart: unless-stopped
+    networks:
+      - blast-assessment-network
 
   api-gateway:
     build:
@@ -82,7 +93,7 @@ services:
       dockerfile: docker/Dockerfile
     command: python -m services.api_gateway.main
     ports:
-      - "8000:8000"
+      - "8292:8292"
     depends_on:
       kafka:
         condition: service_healthy
@@ -95,9 +106,12 @@ services:
       APP_ENV: development
       SERVICE_NAME: api-gateway
       LOG_LEVEL: INFO
+      RATE_LIMIT_PER_MINUTE: 100
     env_file:
       - .env
     restart: unless-stopped
+    networks:
+      - blast-assessment-network
 
   payment-service:
     build:
@@ -118,6 +132,8 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    networks:
+      - blast-assessment-network
 
   notification-service:
     build:
@@ -138,6 +154,68 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    networks:
+      - blast-assessment-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-gateway
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:uid=101,gid=101,mode=1777
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./security-firewalls/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-firewalls/conf.d:/etc/nginx/conf.d:ro
+      - ./security-firewalls/html:/usr/share/nginx/html:ro
+      - nginx_logs:/var/log/nginx:rw
+      - nginx_cache:/var/cache/nginx:rw
+      - nginx_run:/var/run:rw
+    depends_on:
+      - api-gateway
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - TZ=UTC
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    networks:
+      - blast-assessment-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=nginx"
 
 volumes:
   mongo_data:
+  nginx_logs:
+  nginx_cache:
+  nginx_run:
+
+networks:
+  blast-assessment-network:
+    driver: bridge
