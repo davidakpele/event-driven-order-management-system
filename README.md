@@ -59,8 +59,6 @@ SENDGRID_API_KEY=SG.your_sendgrid_key
 SENDGRID_FROM_EMAIL=noreply@yourdomain.com
 ```
 
----
-
 ## Running the Project
 
 **Start all services:**
@@ -101,21 +99,6 @@ docker logs blast_assessment-notification-service-1 --tail 50
 | Mongo Express   | http://localhost:8081      | Internal tooling               |
 
 ---
-
-## Health Check
-
-```bash
-GET http://localhost:8000/health
-```
-
-Expected response:
-```json
-{
-  "status": "ok",
-  "service": "blast-api"
-}
-```
-
 ---
 
 ## NGINX Security Gateway
