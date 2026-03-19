@@ -1,5 +1,3 @@
-# tests/test_order_service.py
-
 import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
 from mongodb.models import Order, OrderStatus, OrderItem, Address, Money, Payment, PaymentStatus
@@ -47,7 +45,7 @@ def _make_service():
     return svc, producer, stripe_client, idempotency_store
 
 
-# ─── create_order ─────────────────────────────────────────────────────────────
+# ─── create_order 
 
 def test_create_order_returns_order():
     svc, producer, _, idempotency_store = _make_service()
@@ -126,7 +124,7 @@ def test_create_order_marks_idempotency_failed_on_exception():
     idempotency_store.mark_failed.assert_called_once()
 
 
-# ─── cancel_order ─────────────────────────────────────────────────────────────
+# ─── cancel_order
 
 def test_cancel_order_success():
     svc, producer, _, _ = _make_service()
@@ -189,7 +187,7 @@ def test_cancel_order_raises_on_version_conflict():
         shipping_address=Address(line1="1 St", city="Lagos", country="NG", postal_code="100"),
     )
     svc._order_repo.get_by_id.return_value = order
-    svc._order_repo.update_status.return_value = False  # version conflict
+    svc._order_repo.update_status.return_value = False  
 
     with pytest.raises(RuntimeError, match="Concurrent modification"):
         svc.cancel_order(order.order_id)

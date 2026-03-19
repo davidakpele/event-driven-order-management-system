@@ -1,7 +1,4 @@
-# tests/test_events.py
-
 import json
-import pytest
 from datetime import datetime
 from kafka.events import (
     BaseEvent, EventTypes, Topics,

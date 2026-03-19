@@ -1,5 +1,3 @@
-# tests/test_models.py
-
 import pytest
 from datetime import datetime, timezone
 from mongodb.models import (
@@ -8,7 +6,7 @@ from mongodb.models import (
 )
 
 
-# ─── Money ────────────────────────────────────────────────────────────────────
+# ─── Money
 
 def test_money_from_float():
     m = Money.from_float(29.99)
@@ -32,7 +30,7 @@ def test_money_from_dict():
     assert m.currency == "GBP"
 
 
-# ─── Order ────────────────────────────────────────────────────────────────────
+# ─── Order 
 
 def _make_order(**kwargs) -> Order:
     defaults = dict(
@@ -121,7 +119,7 @@ def test_order_from_dict_without_payment_intent():
     assert restored.payment_intent_id is None
 
 
-# ─── Payment ──────────────────────────────────────────────────────────────────
+# ─── Payment 
 
 def _make_payment(**kwargs) -> Payment:
     defaults = dict(
@@ -176,7 +174,7 @@ def test_payment_from_dict_roundtrip():
     assert restored.status == p.status
 
 
-# ─── Notification ─────────────────────────────────────────────────────────────
+# ─── Notification 
 
 def test_notification_to_dict_has_correct_fields():
     n = Notification(

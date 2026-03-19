@@ -1,4 +1,3 @@
-# blast_assessment/kafka/producers/blast_producer.py
 
 import json
 import time
@@ -23,7 +22,6 @@ def _build_producer_conf() -> Dict[str, Any]:
         "max.in.flight.requests.per.connection": 1,
         "retries": kafka.retries,
         "retry.backoff.ms": kafka.retry_backoff_ms,
-        # Give broker time to elect coordinator before failing idempotence init
         "transaction.timeout.ms": 60000,
         "linger.ms": 5,
         "batch.size": 65536,
@@ -33,7 +31,6 @@ def _build_producer_conf() -> Dict[str, Any]:
 
 
 def _on_error(err: KafkaError) -> None:
-    # COORDINATOR_LOAD_IN_PROGRESS is transient during broker startup — not fatal
     if "Coordinator load in progress" in str(err):
         logger.debug("Broker coordinator loading, will retry automatically")
         return

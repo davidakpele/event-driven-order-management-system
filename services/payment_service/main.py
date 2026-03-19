@@ -1,5 +1,3 @@
-# blast_assessment/services/payment_service/main.py
-
 """
 Payment Result Service
 Consumes payment.succeeded / payment.failed events from Kafka and updates order state.

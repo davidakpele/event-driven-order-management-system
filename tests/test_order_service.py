@@ -1,5 +1,3 @@
-# tests/test_order_service.py
-
 import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
 from mongodb.models import Order, OrderStatus, OrderItem, Address, Money, Payment, PaymentStatus
@@ -47,7 +45,7 @@ def _make_service():
     return svc, producer, stripe_client, idempotency_store
 
 
-# ─── create_order ─────────────────────────────────────────────────────────────
+# ─── create_order 
 
 def test_create_order_returns_order():
     svc, producer, _, idempotency_store = _make_service()
@@ -126,7 +124,7 @@ def test_create_order_marks_idempotency_failed_on_exception():
     idempotency_store.mark_failed.assert_called_once()
 
 
-# ─── cancel_order ─────────────────────────────────────────────────────────────
+# ─── cancel_order
 
 def test_cancel_order_success():
     svc, producer, _, _ = _make_service()

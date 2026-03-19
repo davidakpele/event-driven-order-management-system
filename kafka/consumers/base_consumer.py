@@ -1,5 +1,3 @@
-# blast_assessment/kafka/consumers/base_consumer.py
-
 import signal
 import threading
 import time
@@ -34,7 +32,6 @@ def _build_consumer_conf(group_id: str) -> Dict[str, Any]:
 
 def _on_commit(err, partitions: List[TopicPartition]) -> None:
     if err:
-        # _NO_OFFSET is not a real error — it means no messages were consumed yet
         if hasattr(err, 'code') and err.code() == KafkaError._NO_OFFSET:
             return
         logger.error("Offset commit failed", extra={"error": str(err)})
@@ -147,7 +144,6 @@ class BaseConsumer(ABC):
                 extra={"topic": msg.topic(), "partition": msg.partition()},
             )
         elif err.code() == KafkaError.UNKNOWN_TOPIC_OR_PART:
-            # Topics not yet created — broker still starting up, safe to ignore
             logger.warning(
                 "Topic not yet available, waiting for broker",
                 extra={"topic": msg.topic()},
@@ -166,7 +162,6 @@ class BaseConsumer(ABC):
             "Partitions revoked",
             extra={"partitions": [(tp.topic, tp.partition) for tp in partitions]},
         )
-        # Only commit if we actually have offsets stored — avoids _NO_OFFSET crash
         try:
             consumer.commit(asynchronous=False)
         except KafkaException as e:

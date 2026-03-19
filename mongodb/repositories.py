@@ -1,5 +1,3 @@
-# blast_assessment/mongodb/repositories.py
-
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
@@ -47,14 +45,11 @@ class OrderRepository:
         self._ensure_indexes()
 
     def _ensure_indexes(self) -> None:
-        # Unconditionally drop sparse/unique indexes before recreating — MongoDB
-        # silently skips creation if the index exists with different options
-        # (e.g. missing sparse), which causes DuplicateKeyError on null values.
         for name in ("payment_intent", "external_ref"):
             try:
                 self._col.drop_index(name)
             except Exception:
-                pass  # doesn't exist yet, that's fine
+                pass  
 
         indexes = [
             IndexModel(
@@ -68,13 +63,13 @@ class OrderRepository:
             IndexModel(
                 [("payment_intent_id", ASCENDING)],
                 name="payment_intent",
-                sparse=True,   # MUST be sparse — null values are not indexed
+                sparse=True,  
                 unique=True,
             ),
             IndexModel(
                 [("external_order_ref", ASCENDING)],
                 name="external_ref",
-                sparse=True,   # MUST be sparse — null values are not indexed
+                sparse=True,
                 unique=True,
             ),
         ]

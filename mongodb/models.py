@@ -1,12 +1,9 @@
-# blast_assessment/mongodb/models.py
-
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from decimal import Decimal
 from enum import Enum
 from typing import Any, Dict, List, Optional
 import uuid
-
 
 class OrderStatus(str, Enum):
     PENDING = "pending"

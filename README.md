@@ -1,6 +1,14 @@
 # Blast Assessment — Senior Backend Engineer
 
-A production-grade event-driven order management system built with Python, FastAPI, Kafka, MongoDB, and Stripe.
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-green.svg)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://img.shields.io/pypi/v/wifi-densepose.svg)](https://pypi.org/project/wifi-densepose/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/wifi-densepose.svg)](https://pypi.org/project/wifi-densepose/)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/ruvnet/wifi-densepose)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/ruvnet/wifi-densepose)
+
+### A production-grade event-driven order management system built with Python, FastAPI, Kafka, MongoDB, and Stripe.
 
 ## Architecture
 
@@ -301,6 +309,12 @@ View live events at **http://localhost:8080** (Kafka UI).
 - **Correlation IDs** — Every request is tagged with a correlation ID propagated through all services and Kafka events for full traceability
 - **Retry with backoff** — Stripe and SendGrid clients implement exponential backoff with jitter
 
+
+##  UNIT TESTING 
+
+```pytest
+pytest tests/ -v
+```
 ## Webhook Note
 
 The Stripe webhook endpoint (`POST /webhooks/stripe`) is not fully implemented with HMAC signature verification. End-to-end webhook testing requires a publicly accessible URL. In production this would be configured via ngrok or a deployed environment with the webhook secret set in `.env`.

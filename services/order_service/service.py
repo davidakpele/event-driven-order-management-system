@@ -1,5 +1,3 @@
-# blast_assessment/services/order_service/service.py
-
 import uuid
 from typing import Any, Dict, List, Optional
 
@@ -108,12 +106,11 @@ class OrderService:
             self._order_repo.insert(order)
             logger.info("Order created", extra={"order_id": order.order_id, "user_id": user_id})
 
-            # Publish domain event
             event = make_order_created_event(order.to_dict(), correlation_id=correlation_id)
             self._producer.produce(
                 topic=Topics.ORDERS_CREATED,
                 event=event,
-                key=order.order_id,  # same order always same partition
+                key=order.order_id,  
             )
 
             self._idempotency.mark_completed(idem_key, {"order_id": order.order_id})
@@ -142,7 +139,7 @@ class OrderService:
         if order.status not in (OrderStatus.PENDING, OrderStatus.CONFIRMED):
             raise ValueError(f"Cannot pay for order in status {order.status}")
 
-        # Derive idempotency key from order_id to make this retry-safe
+        # This derive idempotency key from order_id to make this retry-safe
         idem_key = generate_idempotency_key("payment", order_id)
 
         # Check for existing payment

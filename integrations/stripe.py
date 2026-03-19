@@ -1,4 +1,3 @@
-# blast_assessment/integrations/stripe.py
 
 import hashlib
 import hmac
@@ -14,10 +13,8 @@ from shared.retry import async_retry, RateLimiter
 
 logger = get_logger(__name__)
 
-# Stripe non-retryable HTTP status codes
 NON_RETRYABLE_STATUSES = {400, 401, 403, 404}
 
-# Stripe rate limit: 100 req/s in live mode, 25 req/s in test — be conservative
 _rate_limiter = RateLimiter(rate=20.0, burst=5)
 
 

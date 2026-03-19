@@ -1,5 +1,3 @@
-# blast_assessment/services/notification_service/main.py
-
 """
 Notification Service
 Consumes notification.requested events from Kafka and delivers emails via SendGrid.

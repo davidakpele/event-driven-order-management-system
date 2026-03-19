@@ -1,4 +1,3 @@
-# blast_assessment/kafka/consumers/notification_consumer.py
 
 from confluent_kafka import Message
 from pymongo.database import Database
@@ -75,5 +74,4 @@ class NotificationConsumer(BaseConsumer):
                 extra={"notification_id": notification_id, "error": str(e)},
             )
             self._notification_repo.mark_failed(notification_id, str(e))
-            # Re-raise to trigger DLQ routing via base consumer
             raise

@@ -1,5 +1,3 @@
-# blast_assessment/integrations/webhook_handler.py
-
 import json
 import uuid
 from typing import Any, Dict, Optional
@@ -11,7 +9,6 @@ from shared.logging import get_logger, set_correlation_id
 
 logger = get_logger(__name__)
 
-# Stripe event types we care about
 HANDLED_STRIPE_EVENTS = {
     "payment_intent.succeeded",
     "payment_intent.payment_failed",
@@ -55,7 +52,6 @@ class StripeWebhookHandler:
         event_type = stripe_event.get("type", "")
         stripe_object = stripe_event.get("data", {}).get("object", {})
 
-        # Use Stripe event ID as correlation ID for full traceability
         set_correlation_id(event_id)
         logger.info("Stripe webhook received", extra={"event_type": event_type, "event_id": event_id})
 
@@ -111,7 +107,7 @@ class StripeWebhookHandler:
         self._producer.produce(
             topic=Topics.PAYMENTS_COMPLETED,
             event=domain_event,
-            key=order_id,  # route by order_id for ordering
+            key=order_id,
         )
         logger.info("Payment succeeded event published", extra={"order_id": order_id})
 
@@ -149,7 +145,6 @@ class StripeWebhookHandler:
     def _on_charge_refunded(
         self, stripe_event: Dict[str, Any], charge: Dict[str, Any]
     ) -> None:
-        # Emit refund event for downstream handling (out of scope for this assessment)
         logger.info(
             "Charge refunded",
             extra={"charge_id": charge.get("id"), "amount_refunded": charge.get("amount_refunded")},

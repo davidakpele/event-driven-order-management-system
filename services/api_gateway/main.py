@@ -1,5 +1,3 @@
-# blast_assessment/services/api_gateway/main.py
-
 import uuid
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
@@ -24,7 +22,7 @@ from shared.logging import get_logger, set_correlation_id, set_service_name
 
 logger = get_logger(__name__)
 
-# ─── Startup / Shutdown ───────────────────────────────────────────────────────
+# ─── Startup / Shutdown 
 
 _resources: Dict[str, Any] = {}
 
@@ -83,7 +81,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Blast API", version="1.0.0", lifespan=lifespan)
 
 
-# ─── Dependency Helpers ───────────────────────────────────────────────────────
+# ─── Dependency Helpers
 
 def get_order_service() -> OrderService:
     return OrderService(
@@ -101,7 +99,7 @@ def get_webhook_handler() -> StripeWebhookHandler:
     )
 
 
-# ─── Request/Response Models ──────────────────────────────────────────────────
+# ─── Request/Response Models 
 
 class OrderItemRequest(BaseModel):
     product_id: str
@@ -155,7 +153,7 @@ def order_to_response(order) -> OrderResponse:
     )
 
 
-# ─── Middleware ───────────────────────────────────────────────────────────────
+# ─── Middleware
 
 @app.middleware("http")
 async def correlation_id_middleware(request: Request, call_next):
@@ -179,14 +177,7 @@ async def runtime_error_handler(request: Request, exc: RuntimeError):
 async def duplicate_key_handler(request: Request, exc: DuplicateKeyError):
     return JSONResponse(status_code=409, content={"error": "Resource already exists."})
 
-# ─── Health ───────────────────────────────────────────────────────────────────
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "service": "blast-api"}
-
-
-# ─── Orders ───────────────────────────────────────────────────────────────────
+# ─── Orders
 
 @app.post("/orders", status_code=status.HTTP_201_CREATED, response_model=OrderResponse)
 def create_order(

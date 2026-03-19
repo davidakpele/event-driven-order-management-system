@@ -1,5 +1,3 @@
-# blast_assessment/kafka/consumers/payment_consumer.py
-
 from confluent_kafka import Message
 from pymongo.database import Database
 
