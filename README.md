@@ -100,8 +100,6 @@ docker logs blast_assessment-notification-service-1 --tail 50
 | Kafka UI        | http://localhost:8080      | Internal tooling               |
 | Mongo Express   | http://localhost:8081      | Internal tooling               |
 
-> ⚠️ The FastAPI gateway runs internally on port `8292` and is **not directly accessible**. All traffic must go through NGINX on port `8000`.
-
 ---
 
 ## Health Check
