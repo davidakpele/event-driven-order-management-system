@@ -303,4 +303,4 @@ View live events at **http://localhost:8080** (Kafka UI).
 
 ## Webhook Note
 
-The Stripe webhook endpoint (`POST /webhooks/stripe`) is fully implemented with HMAC signature verification. End-to-end webhook testing requires a publicly accessible URL. In production this would be configured via ngrok or a deployed environment with the webhook secret set in `.env`.
+The Stripe webhook endpoint (`POST /webhooks/stripe`) is not fully implemented with HMAC signature verification. End-to-end webhook testing requires a publicly accessible URL. In production this would be configured via ngrok or a deployed environment with the webhook secret set in `.env`.
