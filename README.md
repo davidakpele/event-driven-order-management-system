@@ -219,12 +219,12 @@ Client Request (port 8000)
 
 ## API Testing Guide
 
-> All requests go through `http://localhost:8000`.
+> All requests go through `http://localhost:8000/api`.
 
 ### 1. Create an Order
 
 ```
-POST http://localhost:8000/orders
+POST http://localhost:8000/api/orders
 ```
 
 **Headers:**
@@ -275,12 +275,12 @@ Idempotency-Key: test-order-001
 ### 2. Get a Single Order
 
 ```
-GET http://localhost:8000/orders/{order_id}
+GET http://localhost:8000/api/orders/{order_id}
 ```
 
 **Example:**
 ```
-GET http://localhost:8000/orders/c3b554c9-8921-4717-82ff-00daf9259022
+GET http://localhost:8000/api/orders/c3b554c9-8921-4717-82ff-00daf9259022
 ```
 
 **Expected Response (200):**
@@ -301,12 +301,12 @@ GET http://localhost:8000/orders/c3b554c9-8921-4717-82ff-00daf9259022
 ### 3. List All Orders for a User
 
 ```
-GET http://localhost:8000/users/{user_id}/orders
+GET http://localhost:8000/api/users/{user_id}/orders
 ```
 
 **Example:**
 ```
-GET http://localhost:8000/users/1/orders
+GET http://localhost:8000/api/users/1/orders
 ```
 
 **Optional query parameters:**
@@ -316,7 +316,7 @@ GET http://localhost:8000/users/1/orders
 
 **Example with filter:**
 ```
-GET http://localhost:8000/users/1/orders?status_filter=pending
+GET http://localhost:8000/api/users/1/orders?status_filter=pending
 ```
 
 **Expected Response (200):**
@@ -339,12 +339,12 @@ GET http://localhost:8000/users/1/orders?status_filter=pending
 ### 4. Initiate Payment
 
 ```
-POST http://localhost:8000/orders/{order_id}/pay
+POST http://localhost:8000/api/orders/{order_id}/pay
 ```
 
 **Example:**
 ```
-POST http://localhost:8000/orders/c3b554c9-8921-4717-82ff-00daf9259022/pay
+POST http://localhost:8000/api/orders/c3b554c9-8921-4717-82ff-00daf9259022/pay
 ```
 
 **Body:**
@@ -376,12 +376,12 @@ After a successful payment, fetch the order again — status will be `payment_pr
 ### 5. Cancel an Order
 
 ```
-POST http://localhost:8000/orders/{order_id}/cancel
+POST http://localhost:8000/api/orders/{order_id}/cancel
 ```
 
 **Example:**
 ```
-POST http://localhost:8000/orders/cd1e7e44-195e-4924-ba63-9166c2ff289a/cancel
+POST http://localhost:8000/api/orders/cd1e7e44-195e-4924-ba63-9166c2ff289a/cancel
 ```
 
 > Only orders in `pending`, `confirmed`, or `payment_failed` status can be cancelled.
